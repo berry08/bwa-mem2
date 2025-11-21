@@ -3,3 +3,5 @@
 *.dSYM
 .*.swp
 a.out
+ext/safestringlib/
+settings.json

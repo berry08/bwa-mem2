@@ -34,7 +34,7 @@
 
 #ifdef __GNUC__
 // Tell GCC to validate printf format string and args
-#define ATTRIBUTE(list) __attribute__ (list)
+#define ATTRIBUTE(list) __attribute__(list)
 #else
 #define ATTRIBUTE(list)
 #endif
@@ -46,35 +46,47 @@
 #define xreopen(fn, mode, fp) err_xreopen_core(__func__, fn, mode, fp)
 #define xzopen(fn, mode) err_xzopen_core(__func__, fn, mode)
 
-#define xassert(cond, msg) if ((cond) == 0) _err_fatal_simple_core(__func__, msg)
+#define xassert(cond, msg) \
+	if ((cond) == 0)       \
+	_err_fatal_simple_core(__func__, msg)
 
 #if defined(__GNUC__) && !defined(__clang__)
 #if defined(__i386__)
 static inline unsigned long long __rdtsc(void)
 {
-    unsigned long long int x;
-    __asm__ volatile (".byte 0x0f, 0x31" : "=A" (x));
-    return x;
+	unsigned long long int x;
+	__asm__ volatile(".byte 0x0f, 0x31" : "=A"(x));
+	return x;
 }
 #elif defined(__x86_64__)
-static inline unsigned long long __rdtsc(void)
-{
-    unsigned hi, lo;
-    __asm__ __volatile__ ("rdtsc" : "=a"(lo), "=d"(hi));
-    return ( (unsigned long long)lo)|( ((unsigned long long)hi)<<32 );
-}
+// static inline unsigned long long __rdtsc(void)
+// {
+//     unsigned hi, lo;
+//     __asm__ __volatile__ ("rdtsc" : "=a"(lo), "=d"(hi));
+//     return ( (unsigned long long)lo)|( ((unsigned long long)hi)<<32 );
+// }
 #endif
 #endif
 
-typedef struct {
+typedef struct
+{
 	uint64_t x, y;
 } pair64_t;
 
-typedef struct { size_t n, m; uint64_t *a; } uint64_v;
-typedef struct { size_t n, m; pair64_t *a; } pair64_v;
+typedef struct
+{
+	size_t n, m;
+	uint64_t *a;
+} uint64_v;
+typedef struct
+{
+	size_t n, m;
+	pair64_t *a;
+} pair64_v;
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 	void err_fatal(const char *header, const char *fmt, ...) ATTRIBUTE((noreturn));
@@ -92,12 +104,12 @@ extern "C" {
 #define err_rewind(FP) err_fseek((FP), 0, SEEK_SET)
 	long err_ftell(FILE *stream);
 	int err_fprintf(FILE *stream, const char *format, ...)
-        ATTRIBUTE((format(printf, 2, 3)));
+		ATTRIBUTE((format(printf, 2, 3)));
 	int err_printf(const char *format, ...)
-        ATTRIBUTE((format(printf, 1, 2)));
+		ATTRIBUTE((format(printf, 1, 2)));
 	int err_fputc(int c, FILE *stream);
 #define err_putchar(C) err_fputc((C), stdout)
-	char* err_fgets(char *str, int size, FILE *stream);
+	char *err_fgets(char *str, int size, FILE *stream);
 	int err_fputs(const char *s, FILE *stream);
 	int err_puts(const char *s);
 	int err_fflush(FILE *stream);
@@ -107,7 +119,7 @@ extern "C" {
 	double cputime();
 	double realtime();
 
-	void ks_introsort_64 (size_t n, uint64_t *a);
+	void ks_introsort_64(size_t n, uint64_t *a);
 	void ks_introsort_128(size_t n, pair64_t *a);
 
 #ifdef __cplusplus
